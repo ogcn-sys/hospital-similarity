@@ -1,0 +1,35 @@
+name: GitHub Pages デプロイ
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: チェックアウト
+        uses: actions/checkout@v4
+
+      - name: Pages 設定
+        uses: actions/configure-pages@v5
+
+      - name: アーティファクト作成
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard
+
+      - name: デプロイ
+        id: deployment
+        uses: actions/deploy-pages@v4

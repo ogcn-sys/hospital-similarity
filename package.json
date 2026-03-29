@@ -1,0 +1,19 @@
+{
+  "name": "secondary-medical-area-analysis",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "fetch:hsa": "node scripts/download-hsa-pdfs.mjs",
+    "verify:hsa-jmap": "node scripts/verify-hsa-vs-jmap.mjs",
+    "build:dashboard": "node scripts/build-hokkaido-dashboard.mjs",
+    "build:gas:hospital-similarity": "node scripts/build-gas-hospital-similarity.mjs",
+    "build:gas:hospital-similarity:lite": "node scripts/build-gas-hospital-similarity-lite.mjs",
+    "serve:dashboard": "python3 -m http.server 4173 -d dashboard",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "playwright": "^1.58.2"
+  }
+}

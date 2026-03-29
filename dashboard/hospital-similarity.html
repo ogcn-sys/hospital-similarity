@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>全国病院 類似病院TOP10 ダッシュボード</title>
+    <link rel="stylesheet" href="./styles.css?v=20260329-ui-refresh" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">全国病院比較</p>
+          <h1>類似病院TOP10 ダッシュボード</h1>
+          <p class="intro">
+            自院と近い病院を、病院規模、病院機能、職員構成を優先した重み付けで比較します。自由検索に加えて、都道府県・医療圏・市区町村で絞り込むリスト検索にも対応しています。
+          </p>
+        </div>
+        <aside class="hero-meta">
+          <div class="meta-card meta-card-combined">
+            <div class="meta-block">
+              <span class="meta-kicker">出典</span>
+              <strong id="source-label" class="meta-body"></strong>
+            </div>
+            <div class="meta-divider"></div>
+            <div class="meta-split">
+              <div class="meta-block">
+                <span class="meta-kicker">対象病院数</span>
+                <strong id="hospital-count" class="meta-value"></strong>
+              </div>
+              <div class="meta-block">
+                <span class="meta-kicker">作成日</span>
+                <strong id="generated-at" class="meta-value"></strong>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </header>
+
+      <section class="panel search-panel">
+        <div class="panel-header">
+          <div>
+            <h2>病院を検索</h2>
+            <p class="panel-note">自由入力の部分一致検索と、所在地で絞り込むリスト検索を併用できます。</p>
+          </div>
+        </div>
+        <div class="search-layout">
+          <form id="hospital-form" class="search-stack">
+            <div class="search-block">
+              <label class="field-label" for="hospital-search">病院名 / 都道府県 / 医療圏 / 市区町村から部分一致検索</label>
+              <div class="selector-row">
+                <input
+                  id="hospital-search"
+                  class="selector-input"
+                  list="hospital-options"
+                  placeholder="例: サンプル病院 / 北海道 / 医療圏 / 市区町村"
+                  autocomplete="off"
+                />
+                <button type="submit" class="primary-button">検索</button>
+              </div>
+              <datalist id="hospital-options"></datalist>
+            </div>
+
+            <div class="search-block">
+              <label class="field-label">所在地・属性で絞り込むリスト検索</label>
+              <div class="filter-grid">
+                <label class="filter-field">
+                  <span>都道府県</span>
+                  <select id="prefecture-filter" class="filter-select"></select>
+                </label>
+                <label class="filter-field">
+                  <span>医療圏</span>
+                  <select id="area-filter" class="filter-select"></select>
+                </label>
+                <label class="filter-field">
+                  <span>市区町村</span>
+                  <select id="city-filter" class="filter-select"></select>
+                </label>
+                <label class="filter-field">
+                  <span>DPC</span>
+                  <select id="dpc-filter" class="filter-select">
+                    <option value="">すべて</option>
+                    <option value="yes">DPCあり</option>
+                    <option value="no">DPCなし</option>
+                  </select>
+                </label>
+              </div>
+              <label class="field-label" for="hospital-list">絞り込み結果</label>
+              <select id="hospital-list" class="hospital-list" size="9"></select>
+            </div>
+          </form>
+        </div>
+        <p id="selector-status" class="panel-note"></p>
+      </section>
+
+      <section class="panel">
+        <div id="selected-hospital"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>比較サマリー</h2>
+            <p class="panel-note">比較元と類似上位3病院の所在地、病床規模、病院機能、総職員数、DPC有無を並べて表示します。</p>
+          </div>
+        </div>
+        <div id="comparison-summary"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>類似病院TOP10</h2>
+            <p class="panel-note">主要項目は常時表示し、それ以外の登録データはカードごとに展開して確認できます。</p>
+          </div>
+        </div>
+        <div id="similarity-top10" class="comparison-grid comparison-grid-wide"></div>
+      </section>
+    </div>
+
+    <script type="module">
+      await import(`./hospital-similarity.js?v=20260329-ui-refresh-${Date.now()}`);
+    </script>
+  </body>
+</html>
