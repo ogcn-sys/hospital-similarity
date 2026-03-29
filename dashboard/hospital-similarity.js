@@ -15,10 +15,13 @@ const areaFilter = document.querySelector("#area-filter");
 const cityFilter = document.querySelector("#city-filter");
 const dpcFilter = document.querySelector("#dpc-filter");
 const hospitalList = document.querySelector("#hospital-list");
+const clearFiltersButton = document.querySelector("#clear-filters");
 const selectorStatus = document.querySelector("#selector-status");
 const selectedHospitalNode = document.querySelector("#selected-hospital");
 const comparisonSummaryNode = document.querySelector("#comparison-summary");
 const similarityTop10Node = document.querySelector("#similarity-top10");
+
+let currentHospitalId = null;
 
 const hospitalMap = new Map(hospitals.map((hospital) => [hospital.id, hospital]));
 const labelToIdMap = new Map(hospitals.map((hospital) => [hospital.selectorLabel, hospital.id]));
@@ -813,6 +816,7 @@ function updateQuery(id) {
 function renderHospital(id) {
   const baseHospital = hospitalMap.get(id) ?? hospitalMap.get(data.focusHospitalId);
   const matches = buildTopMatches(baseHospital);
+  currentHospitalId = baseHospital.id;
 
   searchInput.value = baseHospital.selectorLabel;
   selectorStatus.textContent = `選択: ${baseHospital.selectorLabel}`;
@@ -825,10 +829,26 @@ function renderHospital(id) {
 }
 
 function renderEmptyState() {
+  currentHospitalId = null;
   selectorStatus.textContent = "病院名の一部検索、または所在地フィルターから病院を選択してください。";
   selectedHospitalNode.innerHTML = `<div class="comparison-empty">病院を選ぶと、登録済みの全データを表示します。</div>`;
   comparisonSummaryNode.innerHTML = `<div class="comparison-empty">比較元を選ぶと、上位3病院との近似要素サマリーを表示します。</div>`;
   similarityTop10Node.innerHTML = `<div class="comparison-empty">まだ病院が選択されていません。</div>`;
+}
+
+function clearFiltersAndSearch() {
+  searchInput.value = "";
+  prefectureFilter.value = "";
+  areaFilter.value = "";
+  cityFilter.value = "";
+  dpcFilter.value = "";
+  refreshDependentFilters();
+  updateHospitalList();
+  hospitalList.value = "";
+  renderEmptyState();
+  const url = new URL(window.location.href);
+  url.searchParams.delete("hospital");
+  window.history.replaceState({}, "", url);
 }
 
 function populateSelect(selectNode, values, placeholder) {
@@ -991,6 +1011,13 @@ function bindEvents() {
 
   dpcFilter.addEventListener("change", () => {
     updateHospitalList();
+    if (currentHospitalId) {
+      renderHospital(currentHospitalId);
+    }
+  });
+
+  clearFiltersButton.addEventListener("click", () => {
+    clearFiltersAndSearch();
   });
 
   hospitalList.addEventListener("change", () => {
