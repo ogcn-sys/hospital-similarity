@@ -449,6 +449,15 @@ function computeHospitalSimilarity(baseHospital, candidateHospital) {
 function buildTopMatches(baseHospital) {
   return hospitals
     .filter((hospital) => hospital.id !== baseHospital.id)
+    .filter((hospital) => {
+      if (dpcFilter.value === "yes") {
+        return hasDpc(hospital);
+      }
+      if (dpcFilter.value === "no") {
+        return !hasDpc(hospital);
+      }
+      return true;
+    })
     .map((hospital) => computeHospitalSimilarity(baseHospital, hospital))
     .filter(Boolean)
     .filter((item) => item.comparableFeatureCount >= minSimilarityFeatureCount)
